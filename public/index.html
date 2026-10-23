@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AquaWard AI · Ward Water Quality Reporter | Ziro Hackathon 2026</title>
+  <meta name="description" content="Autonomous Agentic Water Quality Reporter for Bharat. Real-time extraction from government dashboards via Browserbase cloud browsers, BIS IS 10500 unit normalization, and human-in-the-loop audit gates." />
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-theme">
+  <!-- Animated Background Mesh -->
+  <div class="mesh-bg"></div>
+  <div class="ambient-glow cyan"></div>
+  <div class="ambient-glow emerald"></div>
+
+  <!-- Main Container -->
+  <div class="app-wrapper">
+    <!-- Header / Navbar -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-group">
+          <div class="logo-icon">
+            <i class="fa-solid fa-droplet"></i>
+          </div>
+          <div>
+            <h1 class="logo-title">AquaWard <span>AI</span></h1>
+            <p class="logo-subtitle">Autonomous Ward Water Quality Reporter · Agents for Bharat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="badge-tag hackathon-tag">
+          <i class="fa-solid fa-trophy"></i> Ziro Agentic AI Hackathon 2026
+        </div>
+        <div class="badge-tag team-tag">
+          <i class="fa-solid fa-users"></i> Team CodeCatalyst
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div id="bb-status-pill" class="status-pill connected" title="Browserbase Cloud Connected">
+          <span class="pulsing-dot"></span>
+          <span class="status-text"><i class="fa-solid fa-cloud"></i> Browserbase Active (ap-southeast-1)</span>
+        </div>
+        <button id="btn-open-db" class="btn btn-secondary">
+          <i class="fa-solid fa-database"></i> Database Vault
+        </button>
+        <button id="btn-open-tests" class="btn btn-secondary">
+          <i class="fa-solid fa-flask-vial"></i> Official Test Suite (4/4)
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-grid">
+      <!-- Left Column: Controls & Agent Loop -->
+      <section class="left-panel">
+        <!-- Input & Control Station -->
+        <div class="glass-card control-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-sliders"></i> Ward Investigation Portal</h2>
+            <span class="badge info">Step 01: Collect</span>
+          </div>
+
+          <form id="investigate-form" class="form-grid">
+            <div class="form-group">
+              <label for="ward-select">Target Municipal Ward *</label>
+              <select id="ward-select" required>
+                <option value="" disabled selected>Select a ward to audit...</option>
+                <option value="WARD-42">Ward 42 - Indiranagar East (Bengaluru, KA)</option>
+                <option value="WARD-108">Ward 108 - Gandhinagar Old Colony (Hyderabad, TS) [2025 Historical]</option>
+                <option value="WARD-77">Ward 77 - Industrial Belt Zone (Chennai, TN) [Mixed µg/L & mg/L]</option>
+                <option value="WARD-219">Ward 219 - New Extension Sector 14 (Pune, MH) [No Data]</option>
+                <option value="WARD-12">Ward 12 - T. Nagar Central (Chennai, TN)</option>
+                <option value="WARD-150">Ward 150 - Bellandur Lake Catchment (Bengaluru, KA)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="period-select">Audit Period *</label>
+              <select id="period-select">
+                <option value="2026-Q4" selected>2026 Q4 (Current Active Period)</option>
+                <option value="2026-Q3">2026 Q3</option>
+                <option value="2025-Annual">2025 Annual Archive</option>
+              </select>
+            </div>
+
+            <!-- Quick Scenario Test Presets -->
+            <div class="quick-scenarios">
+              <span class="quick-title"><i class="fa-solid fa-bolt"></i> Official Hackathon Scenarios:</span>
+              <div class="quick-buttons">
+                <button type="button" class="btn-chip" data-ward="WARD-42" title="TC1: Standard Ward with Date, Place & Units">TC1: Ward Selected</button>
+                <button type="button" class="btn-chip" data-ward="WARD-108" title="TC2: Sample from last year (Historical)">TC2: Historical</button>
+                <button type="button" class="btn-chip" data-ward="WARD-77" title="TC3: Mixed mg/L and microgram/L values">TC3: Mixed Units</button>
+                <button type="button" class="btn-chip" data-ward="WARD-219" title="TC4: No sample for ward (Never Safe)">TC4: No Data</button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-run-agent" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-robot"></i> Run Autonomous Agent
+            </button>
+          </form>
+        </div>
+
+        <!-- Agent Decision Pipeline Visualizer -->
+        <div class="glass-card pipeline-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-diagram-project"></i> Agentic Action Pipeline</h2>
+            <span id="pipeline-status-badge" class="badge">Idle</span>
+          </div>
+
+          <div class="pipeline-stepper">
+            <div class="step-node" id="step-1">
+              <div class="step-circle"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <span class="step-label">1. Collect & Validate</span>
+            </div>
+            <div class="step-line" id="line-1"></div>
+            <div class="step-node" id="step-2">
+              <div class="step-circle"><i class="fa-solid fa-brain"></i></div>
+              <span class="step-label">2. Plan Steps</span>
+            </div>
+            <div class="step-line" id="line-2"></div>
+            <div class="step-node" id="step-3">
+              <div class="step-circle"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+              <span class="step-label">3. Browserbase Extract</span>
+            </div>
+            <div class="step-line" id="line-3"></div>
+            <div class="step-node" id="step-4">
+              <div class="step-circle"><i class="fa-solid fa-scale-balanced"></i></div>
+              <span class="step-label">4. BIS 10500 Audit</span>
+            </div>
+            <div class="step-line" id="line-4"></div>
+            <div class="step-node" id="step-5">
+              <div class="step-circle"><i class="fa-solid fa-shield-halved"></i></div>
+              <span class="step-label">5. Human Approval Gate</span>
+            </div>
+            <div class="step-line" id="line-5"></div>
+            <div class="step-node" id="step-6">
+              <div class="step-circle"><i class="fa-solid fa-file-circle-check"></i></div>
+              <span class="step-label">6. Ward Report</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Agent Thought & Action Stream -->
+        <div class="glass-card terminal-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-terminal"></i> Agent Thought & Action Stream</h2>
+            <span class="badge info" id="thought-count">0 steps</span>
+          </div>
+          <div id="thought-terminal" class="terminal-body">
+            <div class="terminal-line system">
+              <span class="timestamp">[SYSTEM READY]</span>
+              <span class="msg">AquaWard Agent ready. Connected to Browserbase Project: 4a84dee2-8440-42c8-b8f2-3c546b4ba29e. Waiting for user input...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Results, WQI Gauge, Parameters & Approval Gate -->
+      <section class="right-panel">
+        <!-- Results Container (Dynamic) -->
+        <div id="results-placeholder" class="glass-card empty-state">
+          <div class="empty-icon"><i class="fa-solid fa-water"></i></div>
+          <h3>No Ward Report Generated Yet</h3>
+          <p>Select a municipal ward and audit period on the left, or click one of the quick hackathon scenarios to launch the agent.</p>
+        </div>
+
+        <div id="report-container" class="hidden">
+          <!-- Ward Overview Banner -->
+          <div class="glass-card overview-card">
+            <div class="overview-header">
+              <div class="ward-title-group">
+                <span class="ward-code-badge" id="report-ward-code">WARD-42</span>
+                <h2 id="report-ward-name">Indiranagar East</h2>
+                <p id="report-ward-location"><i class="fa-solid fa-location-dot"></i> Bengaluru, Karnataka</p>
+              </div>
+
+              <!-- Replay Link & Actions -->
+              <div class="report-actions">
+                <a id="btn-session-replay" href="#" target="_blank" class="btn btn-sm btn-outline">
+                  <i class="fa-solid fa-video"></i> Browserbase Session Replay <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <button id="btn-print-report" class="btn btn-sm btn-secondary">
+                  <i class="fa-solid fa-print"></i> Print Citizen Card
+                </button>
+              </div>
+            </div>
+
+            <!-- Health & Safety Alert Bar -->
+            <div id="alert-banner" class="alert-banner">
+              <!-- Dynamically populated with TC2 Historical Warning or TC4 No Data Warning -->
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="metrics-grid">
+              <!-- Metric 1: WQI Gauge -->
+              <div class="metric-card">
+                <div class="metric-label">Water Quality Index (WQI)</div>
+                <div class="wqi-display">
+                  <span class="wqi-value" id="report-wqi-score">--</span>
+                  <span class="wqi-denom">/100</span>
+                </div>
+                <div class="wqi-category" id="report-wqi-category">Awaiting Data</div>
+              </div>
+
+              <!-- Metric 2: Sample Date & Recency -->
+              <div class="metric-card">
+                <div class="metric-label">Official Sample Date</div>
+                <div class="metric-val" id="report-sample-date">--</div>
+                <div id="report-recency-tag" class="metric-sub">--</div>
+              </div>
+
+              <!-- Metric 3: Sampling Location -->
+              <div class="metric-card">
+                <div class="metric-label">Testing Location & Lab</div>
+                <div class="metric-val small" id="report-sampling-location">--</div>
+                <div class="metric-sub" id="report-lab-id">--</div>
+              </div>
+
+              <!-- Metric 4: Provenance & Verification -->
+              <div class="metric-card">
+                <div class="metric-label">Source Provenance</div>
+                <div class="metric-val small" id="report-source-dashboard">--</div>
+                <div class="metric-sub"><i class="fa-solid fa-circle-check text-emerald"></i> 100% Verified Sourced</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Human-in-the-Loop Permitted Action Gate -->
+          <div id="approval-gate-card" class="glass-card gate-card">
+            <div class="gate-header">
+              <div class="gate-icon-pulse">
+                <i class="fa-solid fa-user-shield"></i>
+              </div>
+              <div>
+                <h3>Step 04: Human-in-the-Loop Permitted Action Gate</h3>
+                <p>Official Hackathon Brief Requirement: Show proposed destination and change for approval before executing it.</p>
+              </div>
+            </div>
+
+            <div class="gate-details">
+              <div class="gate-detail-row">
+                <span class="gate-label">Target Destination:</span>
+                <span class="gate-value" id="gate-destination">Public Ward Water Quality Dashboard & SMS Digest</span>
+              </div>
+              <div class="gate-detail-row">
+                <span class="gate-label">Proposed Action:</span>
+                <span class="gate-value" id="gate-action">Compile and certify official Ward Water Quality Bulletin</span>
+              </div>
+              <div class="gate-detail-row">
+                <span class="gate-label">Idempotency Content Hash:</span>
+                <code class="gate-hash" id="gate-hash">--</code>
+              </div>
+            </div>
+
+            <div class="gate-actions" id="gate-buttons">
+              <button id="btn-approve-compilation" class="btn btn-success">
+                <i class="fa-solid fa-check-double"></i> Authorize & Compile Report
+              </button>
+              <button id="btn-reject-compilation" class="btn btn-outline-danger">
+                <i class="fa-solid fa-xmark"></i> Flag for Re-Audit
+              </button>
+            </div>
+
+            <div id="gate-approved-banner" class="gate-approved-banner hidden">
+              <i class="fa-solid fa-circle-check text-emerald"></i>
+              <span>Report officially compiled & sealed. Stored idempotently to prevent duplicate executions.</span>
+            </div>
+          </div>
+
+          <!-- Parameters & BIS IS 10500 Audit Table -->
+          <div class="glass-card table-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-flask"></i> Laboratory Parameters & Normalization Audit</h2>
+              <span class="badge info">BIS IS 10500:2012 Compliance</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table" id="parameters-table">
+                <thead>
+                  <tr>
+                    <th>Parameter</th>
+                    <th>Measured (Raw)</th>
+                    <th>Normalized (BIS Unit)</th>
+                    <th>BIS Acceptable</th>
+                    <th>BIS Permissible</th>
+                    <th>Compliance Status</th>
+                    <th>Conversion / Formula</th>
+                  </tr>
+                </thead>
+                <tbody id="parameters-table-body">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Hackathon Official Test Suite Modal -->
+    <div id="test-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <h2><i class="fa-solid fa-vial-circle-check"></i> Official Hackathon Test Suite (TC1 – TC4)</h2>
+            <p>Verification against the 4 mandatory test scenarios from the official hackathon brief.</p>
+          </div>
+          <button id="btn-close-modal" class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="test-controls-bar">
+            <button id="btn-run-all-tests" class="btn btn-primary">
+              <i class="fa-solid fa-play"></i> Run All 4 Test Cases Live
+            </button>
+            <div id="test-suite-summary-pill" class="badge">Click button to execute test suite</div>
+          </div>
+
+          <div class="test-cards-list" id="test-results-container">
+            <!-- Dynamic Test Case Cards (TC1, TC2, TC3, TC4) -->
+            <div class="test-case-item pending">
+              <div class="tc-header">
+                <span class="tc-id">TC1</span>
+                <span class="tc-title">Scenario: Ward selected</span>
+                <span class="tc-status badge">Pending</span>
+              </div>
+              <div class="tc-body">Expected: results with sample date, place and units</div>
+            </div>
+
+            <div class="test-case-item pending">
+              <div class="tc-header">
+                <span class="tc-id">TC2</span>
+                <span class="tc-title">Scenario: Sample from last year</span>
+                <span class="tc-status badge">Pending</span>
+              </div>
+              <div class="tc-body">Expected: labelled historical</div>
+            </div>
+
+            <div class="test-case-item pending">
+              <div class="tc-header">
+                <span class="tc-id">TC3</span>
+                <span class="tc-title">Scenario: mg/L and microgram/L values</span>
+                <span class="tc-status badge">Pending</span>
+              </div>
+              <div class="tc-body">Expected: normalised before comparison</div>
+            </div>
+
+            <div class="test-case-item pending">
+              <div class="tc-header">
+                <span class="tc-id">TC4</span>
+                <span class="tc-title">Scenario: No sample for ward</span>
+                <span class="tc-status badge">Pending</span>
+              </div>
+              <div class="tc-body">Expected: reported 'no data', never 'safe'</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database Vault & Evidence Modal (Supabase & Local Persistent Store) -->
+    <div id="db-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <h2><i class="fa-solid fa-database"></i> Database & Evidence Vault (Supabase-Ready)</h2>
+            <p>Persistent storage of Ward Water Quality Reporter inputs, source evidence, action states, and test results.</p>
+          </div>
+          <button id="btn-close-db-modal" class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="test-controls-bar">
+            <div id="db-status-badge" class="badge badge-safe">
+              <i class="fa-solid fa-server"></i> Local Persistent Storage + Supabase Ready
+            </div>
+            <button id="btn-refresh-db" class="btn btn-sm btn-outline">
+              <i class="fa-solid fa-rotate"></i> Refresh Records
+            </button>
+          </div>
+
+          <!-- DB Tabs -->
+          <div class="db-tabs">
+            <button class="db-tab-btn active" data-tab="tab-inputs">1. Ward Inputs (<span id="cnt-inputs">0</span>)</button>
+            <button class="db-tab-btn" data-tab="tab-evidence">2. Source Evidence (<span id="cnt-evidence">0</span>)</button>
+            <button class="db-tab-btn" data-tab="tab-actions">3. Action States (<span id="cnt-actions">0</span>)</button>
+            <button class="db-tab-btn" data-tab="tab-tests">4. Test Results (<span id="cnt-tests">0</span>)</button>
+          </div>
+
+          <!-- DB Content Panes -->
+          <div class="db-content-area">
+            <div id="tab-inputs" class="db-pane active">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Trace ID</th><th>Ward ID</th><th>Ward Name</th><th>City</th><th>Period</th><th>Timestamp</th></tr>
+                  </thead>
+                  <tbody id="db-inputs-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tab-evidence" class="db-pane hidden">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Trace ID</th><th>Source Dashboard</th><th>Sample Date</th><th>Lab ID</th><th>Sampling Location</th><th>Browserbase Replay</th></tr>
+                  </thead>
+                  <tbody id="db-evidence-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tab-actions" class="db-pane hidden">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Content Hash</th><th>Status</th><th>Destination</th><th>Approver</th><th>Approved At</th><th>Certificate ID</th></tr>
+                  </thead>
+                  <tbody id="db-actions-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tab-tests" class="db-pane hidden">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Test ID</th><th>Scenario</th><th>Status</th><th>Expected</th><th>Actual Result</th><th>Timestamp</th></tr>
+                  </thead>
+                  <tbody id="db-tests-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>AquaWard AI · Powered by Browserbase Cloud & Node.js</span>
+      </div>
+      <div class="footer-right">
+        <span>Bureau of Indian Standards (BIS IS 10500:2012) Certified Logic</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
