@@ -89,14 +89,19 @@ app.get('/api/browserbase/status', async (req, res) => {
   }
 });
 
+// Health check for Render and cloud monitors
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Start Express Server
 const PORT = config.PORT;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`====================================================`);
   console.log(` AquaWard AI - Ward Water Quality Reporter`);
   console.log(` Ziro Agentic AI Hackathon 2026 (Agents for Bharat)`);
   console.log(` Team: ${config.TEAM_NAME} | Author: ${config.AUTHOR_NAME}`);
-  console.log(` Server running on: http://localhost:${PORT}`);
+  console.log(` Server running on port: ${PORT}`);
   console.log(` Browserbase Project: ${config.BROWSERBASE_PROJECT_ID}`);
   console.log(`====================================================`);
 });

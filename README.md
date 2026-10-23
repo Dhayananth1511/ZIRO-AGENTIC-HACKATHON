@@ -98,6 +98,37 @@ npm test
 
 ---
 
+## 🌐 Deploy to Render (Cloud Hosting)
+
+This repository includes a `render.yaml` blueprint for instant deployment on [Render](https://render.com).
+
+### Option A: Standard Web Service Setup (Recommended)
+1. Go to [Render Dashboard](https://dashboard.render.com/) and click **New +** -> **Web Service**.
+2. Connect your GitHub repository: `Dhayananth1511/ZIRO-AGENTIC-HACKATHON`.
+3. Configure the service:
+   - **Name:** `aquaward-ai`
+   - **Environment:** `Node`
+   - **Region:** `Singapore` (or nearest)
+   - **Branch:** `main`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Plan:** Free
+4. Add **Environment Variables**:
+   - `NODE_ENV` = `production`
+   - `BROWSERBASE_API_KEY` = `<Your Browserbase API Key>`
+   - `BROWSERBASE_PROJECT_ID` = `<Your Browserbase Project ID>`
+   - `BROWSERBASE_REGION` = `ap-southeast-1`
+5. Click **Create Web Service**. Render will build and deploy your app at `https://aquaward-ai.onrender.com`.
+
+### Option B: Render Blueprint (Infrastructure-as-Code)
+1. In Render Dashboard, click **New +** -> **Blueprint**.
+2. Connect `Dhayananth1511/ZIRO-AGENTIC-HACKATHON`.
+3. It will automatically detect `render.yaml` and configure the service.
+4. Input your `BROWSERBASE_API_KEY` and `BROWSERBASE_PROJECT_ID` when prompted.
+5. Click **Apply**.
+
+---
+
 ## 🛡️ Bureau of Indian Standards (BIS IS 10500:2012) Matrix
 
 | Parameter | Standard Unit | BIS Acceptable Limit | BIS Permissible Limit | Health Classification |
