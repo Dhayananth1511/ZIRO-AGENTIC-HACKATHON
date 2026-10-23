@@ -79,8 +79,8 @@ npm install
 ### 3. Configure Environment Variables
 Create or verify `.env`:
 ```env
-BROWSERBASE_API_KEY=bb_live_9G69-dJVOd-fdYE9U1KppwH6l9g
-BROWSERBASE_PROJECT_ID=4a84dee2-8440-42c8-b8f2-3c546b4ba29e
+BROWSERBASE_API_KEY=-
+BROWSERBASE_PROJECT_ID=-
 PORT=3000
 NODE_ENV=development
 ```
